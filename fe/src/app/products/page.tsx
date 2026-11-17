@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Category, Product } from '@/types';
 import { apiFetch } from '@/lib/api';
@@ -8,7 +8,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { ProductGridSkeleton } from '@/components/Skeletons';
 import { EmptyState } from '@/components/EmptyState';
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -245,5 +245,13 @@ export default function ProductsPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<ProductGridSkeleton count={8} />}>
+      <ProductsContent />
+    </Suspense>
   );
 }
